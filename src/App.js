@@ -1,12 +1,13 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { Component } from "react";
-
+import CardList from "./components/card-list";
 class App extends Component {
   constructor() {
     super();
     this.state = {
       monsters: [],
+      currentSearch: "",
     };
   }
 
@@ -20,12 +21,28 @@ class App extends Component {
       );
   }
 
+  onSearchChange = (event) => {
+    this.setState(() => {
+      return { currentSearch: event.target.value.toLowerCase() };
+    });
+  };
+
   render() {
+    const { monsters, currentSearch } = this.state;
+    const { onSearchChange } = this;
+    const filteredMonsters = monsters.filter((monsters) => {
+      return monsters.name.toLowerCase().includes(currentSearch);
+    });
     return (
       <div className="App">
-        {this.state.monsters.map((monster) => {
-          return <h1>{monster.name}</h1>;
-        })}
+        <input
+          className="search-box"
+          type="search"
+          placeholder="search monsters"
+          onChange={onSearchChange}
+        ></input>
+
+        <CardList monsters={filteredMonsters}></CardList>
       </div>
     );
   }
